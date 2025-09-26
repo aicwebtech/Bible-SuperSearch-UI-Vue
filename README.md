@@ -1,6 +1,8 @@
-# ui-vue
+# Bible-SuperSearch-UI-Vue
 
-This template should help get you started developing with Vue 3 in Vite.
+The Bible SuperSearch UI (CLient), (re)built using Vuejs / Veutify.
+
+This is a work in progress, and anything other than experimental use is NOT reccomended.
 
 ## Recommended IDE Setup
 
