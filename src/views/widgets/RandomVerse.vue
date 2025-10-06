@@ -1,6 +1,5 @@
 <script setup>
 import axios from 'axios';
-import { VBtn } from 'vuetify/components';
 import { ref, inject } from 'vue';
 
 const verse = ref(null);
@@ -43,8 +42,10 @@ function reset() {
 <template>
     <div>
         <h1>Random (Composition API)</h1>
-        <v-btn @click="getRandomChapter">Random Chapter</v-btn>
-        <v-btn @click="getRandomVerse">Random Verse</v-btn>
+        <v-btn color="secondary" @click="getRandomChapter" prepend-icon="mdi-home"
+            >Random Chapter</v-btn
+        >
+        <v-btn color="primary" @click="getRandomVerse">Random Verse</v-btn>
         <br /><br />
 
         <div v-if="verse">

@@ -2,9 +2,18 @@ import './assets/main.css';
 import defaultConfig from './config-default.js';
 
 import { createApp } from 'vue';
+
+// Misc libraries
 import { createPinia } from 'pinia';
-import { createVuetify } from 'vuetify';
 import axios from 'axios';
+
+// Vuetify
+import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles';
+//import * as vuetifyComponents from 'vuetify/components';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
+
 import App from './App.vue';
 // /import vue from 'eslint-plugin-vue';
 
@@ -16,8 +25,23 @@ import App from './App.vue';
 // biblesupersearch_form_data // object
 
 const vuetify = createVuetify({
+    //components: vuetifyComponents,
+    icons: {
+        defaultSet: 'mdi',
+        aliases,
+        sets: {
+            mdi,
+        },
+    },
     theme: {
         defaultTheme: 'light',
+        themes: {
+            light: {
+                colors: {
+                    secondary: '#ffff00',
+                },
+            },
+        },
     },
 });
 
