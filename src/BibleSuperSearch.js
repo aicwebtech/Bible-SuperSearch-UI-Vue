@@ -11,8 +11,10 @@ import axios from 'axios';
 import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles';
-//import * as vuetifyComponents from 'vuetify/components';
+// import * as vuetifyComponents from 'vuetify/components';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
+
+// console.log('vuetifyComponents', vuetifyComponents.VRow);
 
 import App from './App.vue';
 // /import vue from 'eslint-plugin-vue';
