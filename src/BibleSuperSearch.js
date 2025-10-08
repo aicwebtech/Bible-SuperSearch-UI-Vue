@@ -86,7 +86,7 @@ function createBibleSuperSearchApp(mount, config) {
             .catch((error) => {
                 // Todo: show error to user, along with backup Bibles to download
                 console.error('Error loading statics:', error);
-                statics = {};
+                statics = false;
             });
 
         return;
