@@ -28,25 +28,42 @@ function music() {
     });
 }
 
-function speech() {
-    axios({
-        method: 'post',
-        url: 'https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb',
-        responseType: 'blob', // important!!
-        headers: {
-            // 'Content-Type': 'audio/mpeg',
-            'Content-Type': 'application/json',
-            'xi-api-key': null,
-        },
-        data: {
-            text: 'In the beginning God created the heaven and the earth.',
-            model_id: 'eleven_multilingual_v2', // Example voice
-            output_format: 'mp3_44100_128',
-        },
-    }).then((response) => {
-        const blob = new Blob([response.data], { type: 'audio/mpeg' });
-        url.value = URL.createObjectURL(blob);
-    });
+async function speech() {
+    // const APIKEY = '8erif2dQGWaORbndl0GXv54vI1NKL4Qt1BRGPokI',
+    //     voice = 'mickey',
+    //     text = 'Hi there from the API';
+    // await pipeline(
+    //     Readable.from([text]),
+    //     got.stream.post(`https://api.narakeet.com/text-to-speech/m4a?voice=${voice}`, {
+    //         headers: {
+    //             accept: 'application/octet-stream',
+    //             'x-api-key': APIKEY,
+    //             'content-type': 'text/plain',
+    //         },
+    //     }),
+    //     () => {
+    //         /* createWriteStream('speech.m4a') */
+    //     },
+    // );
+    // axios({
+    //     method: 'post',
+    //     url: 'https://api.narakeet.com/text-to-speech/mp3',
+    //     responseType: 'blob', // important!!
+    //     headers: {
+    //         // 'Content-Type': 'audio/mpeg',
+    //         'Content-Type': 'application/json',
+    //         'xi-api-key': '8erif2dQGWaORbndl0GXv54vI1NKL4Qt1BRGPokI',
+    //     },
+    //     data: 'In the beginning God created the heaven and the earth.',
+    //     _data: {
+    //         text: 'In the beginning God created the heaven and the earth.',
+    //         model_id: 'eleven_multilingual_v2', // Example voice
+    //         output_format: 'mp3_44100_128',
+    //     },
+    // }).then((response) => {
+    //     const blob = new Blob([response.data], { type: 'audio/mpeg' });
+    //     url.value = URL.createObjectURL(blob);
+    // });
 }
 </script>
 

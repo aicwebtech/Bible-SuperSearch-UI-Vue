@@ -2,6 +2,8 @@
 import axios from 'axios';
 import { ref, inject } from 'vue';
 
+import AudioContainer from '@/components/results/AudioContainer.vue';
+
 const verse = ref(null);
 const chapter = ref(null);
 const config = inject('config');
@@ -41,6 +43,8 @@ function reset() {
 
 <template>
     <div>
+        <audio-container></audio-container>
+
         <h1>Random (Composition API)</h1>
         <v-btn color="secondary" @click="getRandomChapter" prepend-icon="mdi-home"
             >Random Chapter</v-btn
