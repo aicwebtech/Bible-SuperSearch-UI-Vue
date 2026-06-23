@@ -7,7 +7,8 @@ import axios from 'axios';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import { useConfigStore } from '@/stores/configs.js';
+import { useConfigStore } from '@/stores/config.js';
+import { useStaticsStore } from '@/stores/statics.js';
 
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
@@ -48,39 +49,37 @@ function mountInstance(el) {
 
     const config = Object.assign({}, defaultConfig, globalConfig, jsonConfig, attrConfig);
 
-    if (
-        typeof window.biblesupersearch_statics === 'undefined' ||
-        window.biblesupersearch_statics === null
-    ) {
-        // try to load statics from server
-        var url = (config.apiUrl || '') + '/api/statics';
-        var eln = el;
-        console.log('Loading statics from', url);
-        axios
-            .get(url)
-            .then((response) => {
-                window.biblesupersearch_statics = response.data.results;
-                console.log('Loaded statics:', window.biblesupersearch_statics);
+    // if (
+    //     typeof window.biblesupersearch_statics === 'undefined' ||
+    //     window.biblesupersearch_statics === null
+    // ) {
+    //     // try to load statics from server
+    //     var url = (config.apiUrl || '') + '/api/statics';
+    //     console.log('Loading statics from', url);
+    //     axios
+    //         .get(url)
+    //         .then((response) => {
+    //             window.biblesupersearch_statics = response.data.results;
+    //             console.log('Loaded statics:', window.biblesupersearch_statics);
 
-                mountInstance(eln);
-            })
-            .catch((error) => {
-                // Todo: show error to user, along with backup Bibles to download
-                console.error('Error loading statics:', error);
-                window.biblesupersearch_statics = false;
-            });
+    //             mountInstance(el);
+    //         })
+    //         .catch((error) => {
+    //             // Todo: show error to user, along with backup Bibles to download
+    //             console.error('Error loading statics:', error);
+    //             window.biblesupersearch_statics = false;
+    //         });
 
-        return;
-    }
+    //     return;
+    // }
 
     const app = createApp(App);
     app.use(vuetify);
-    app.provide('config', config);
-    app.provide('statics', window.biblesupersearch_statics);
     const pinia = createPinia(); // fresh store per instance — no cross-talk
     app.use(pinia);
 
     useConfigStore(pinia).init(config);
+    useStaticsStore(pinia).init(window.biblesupersearch_statics);
 
     app.mount(el);
     el.dataset.bssMounted = 'true';

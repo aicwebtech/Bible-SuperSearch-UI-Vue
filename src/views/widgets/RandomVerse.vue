@@ -1,23 +1,25 @@
 <script setup>
 import axios from 'axios';
 import { ref, inject } from 'vue';
-import { useConfigStore } from '@/stores/configs';
+import { useConfigStore } from '@/stores/config';
+import { useStaticsStore } from '@/stores/statics';
 
 import AudioContainer from '@/components/results/AudioContainer.vue';
 
 const verse = ref(null);
 const chapter = ref(null);
 const configStore = useConfigStore();
-const url = configStore.config.apiUrl;
-// const url = configStore.get('apiUrl');
+const url = configStore.get('apiUrl');
+const staticsStore = useStaticsStore();
+const statics = staticsStore.getAll();
 
-console.log('RandomVerse.vue - API URL:', url);
+console.log('RandomVerse.vue:', configStore.getAll());
 
 function getRandomVerse() {
     reset();
 
     axios
-        .get(url + '/api?reference=Random%20Verse&data_format=simple')
+        .get(url + '/api?reference=Random%20Verse&data_format=simple&_t=' + new Date().getTime())
         .then(function (response) {
             verse.value = response.data.results.kjv[0];
         })
@@ -30,7 +32,7 @@ function getRandomChapter() {
     reset();
 
     axios
-        .get(url + '/api?reference=Random%20Chapter&data_format=simple')
+        .get(url + '/api?reference=Random%20Chapter&data_format=simple&_t=' + new Date().getTime())
         .then(function (response) {
             chapter.value = response.data.results.kjv;
         })
@@ -70,5 +72,10 @@ function reset() {
                 </p>
             </div>
         </div>
+
+        <h2>Info</h2>
+        <p>API URL: {{ url }}</p>
+        <p>API Version: {{ statics.api_version }}</p>
+        <p>API Software Version: {{ statics.version }}</p>
     </div>
 </template>
