@@ -1,13 +1,17 @@
 <script setup>
 import axios from 'axios';
 import { ref, inject } from 'vue';
+import { useConfigStore } from '@/stores/configs';
 
 import AudioContainer from '@/components/results/AudioContainer.vue';
 
 const verse = ref(null);
 const chapter = ref(null);
-const config = inject('config');
-const url = config.apiUrl;
+const configStore = useConfigStore();
+const url = configStore.config.apiUrl;
+// const url = configStore.get('apiUrl');
+
+console.log('RandomVerse.vue - API URL:', url);
 
 function getRandomVerse() {
     reset();

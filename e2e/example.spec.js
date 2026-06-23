@@ -1,11 +1,13 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
-import appConfig from '../config.js';
+//import appConfig from '../config.js';
 
-console.log('Hello world!', appConfig);
+console.log('Hello world!', process.env.TEST_BASE_URL); // TEST_BASE_URL='http://hello-world' npm run test:e2e
 
-test('has title', async ({ page }) => {
+test('has title', async ({ page }, testInfo) => {
+    //console.log('Test Config:', testInfo.config);
+
     await page.goto('https://playwright.dev/');
 
     // Expect a title "to contain" a substring.

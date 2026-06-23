@@ -1,47 +1,110 @@
-import { createBibleSuperSearchApp } from './BibleSuperSearch.js';
+//import { createBibleSuperSearchApp } from './BibleSuperSearch.js';
 
-/*
 import './assets/main.css';
 import defaultConfig from './config-default.js';
+import axios from 'axios';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { createVuetify } from 'vuetify';
 import App from './App.vue';
+import { useConfigStore } from '@/stores/configs.js';
 
-
+// Vuetify
+import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles';
+// import * as vuetifyComponents from 'vuetify/components';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
 
 const vuetify = createVuetify({
+    //components: vuetifyComponents,
+    icons: {
+        defaultSet: 'mdi',
+        aliases,
+        sets: {
+            mdi,
+        },
+    },
     theme: {
         defaultTheme: 'light',
+        themes: {
+            light: {
+                colors: {
+                    secondary: '#ffff00',
+                },
+            },
+        },
     },
 });
-*/
 
-// const app = createApp(App);
-// app.use(vuetify);
-// app.use(createPinia());
-// app.provide('config', merged_config);
-// app.mount('#app');
+function mountInstance(el) {
+    if (el.dataset.bssMounted) return; // guard against double-mount
 
-// const extra = createApp(App);
-// extra.use(vuetify);
-// extra.use(createPinia());
-// extra.provide('config', merged_config);
-// extra.mount('#extra');
+    const attrConfig = parseDataAttributes(el.dataset);
+    const jsonConfig = JSON.parse(el.dataset.config || '{}');
 
-// createBibleSuperSearchApp('#app', merged_config);
-// createBibleSuperSearchApp('#extra', merged_config);
+    // Global var becomes a *default* shared across instances, still overridable per-element
+    const globalConfig = window.biblesupersearch_config_options || {};
 
-// function createBibleSuperSearchApp(mount, config) {
-//     mount = mount || '#app';
-//     var app2 = createApp(App);
+    const config = Object.assign({}, defaultConfig, globalConfig, jsonConfig, attrConfig);
 
-//     app2.use(vuetify);
-//     app2.use(createPinia());
-//     app2.provide('config', config);
+    if (
+        typeof window.biblesupersearch_statics === 'undefined' ||
+        window.biblesupersearch_statics === null
+    ) {
+        // try to load statics from server
+        var url = (config.apiUrl || '') + '/api/statics';
+        var eln = el;
+        console.log('Loading statics from', url);
+        axios
+            .get(url)
+            .then((response) => {
+                window.biblesupersearch_statics = response.data.results;
+                console.log('Loaded statics:', window.biblesupersearch_statics);
 
-//     app2.mount(mount);
-// }
+                mountInstance(eln);
+            })
+            .catch((error) => {
+                // Todo: show error to user, along with backup Bibles to download
+                console.error('Error loading statics:', error);
+                window.biblesupersearch_statics = false;
+            });
 
-// export { createBibleSuperSearchApp } from 'BibleSuperSearch';
+        return;
+    }
+
+    const app = createApp(App);
+    app.use(vuetify);
+    app.provide('config', config);
+    app.provide('statics', window.biblesupersearch_statics);
+    const pinia = createPinia(); // fresh store per instance — no cross-talk
+    app.use(pinia);
+
+    useConfigStore(pinia).init(config);
+
+    app.mount(el);
+    el.dataset.bssMounted = 'true';
+
+    return app;
+}
+
+function parseDataAttributes(dataset) {
+    const out = {};
+
+    for (const key in dataset) {
+        let val = dataset[key];
+        if (val === 'true') val = true;
+        else if (val === 'false') val = false;
+        else if (!isNaN(val) && val.trim() !== '') val = Number(val);
+        out[key] = val;
+    }
+
+    return out;
+}
+
+function bootstrap() {
+    const mounts = document.querySelectorAll('.biblesupersearch-app-vue:not([data-bss-mounted])');
+    mounts.forEach(mountInstance);
+}
+
+document.addEventListener('DOMContentLoaded', bootstrap);

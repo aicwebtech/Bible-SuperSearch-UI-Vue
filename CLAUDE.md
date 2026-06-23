@@ -15,7 +15,7 @@ npm run build        # Build, then COPY dist/* into ../ui-wordpress/com_test/js/
 npm run test:unit    # Vitest (jsdom). Add `run` for one-shot: npx vitest run
 npm run lint         # eslint . --fix
 npm run format       # prettier --write src/
-npm run test:e2e  # e2e (no npm script; runs files in e2e/). CI runs this on push/PR.
+npm run test:e2e     # Playwright e2e. CI runs this on push/PR.
 ```
 
 - Single unit test: `npx vitest run src/components/__tests__/HelloWorld.spec.js` or filter by name `npx vitest -t "renders properly"`.
