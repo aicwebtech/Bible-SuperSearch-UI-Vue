@@ -9,6 +9,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import { useConfigStore } from '@/stores/config.js';
 import { useStaticsStore } from '@/stores/statics.js';
+import { useSystemStore } from '@/stores/system.js';
 
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'; // Ensure you are using css-loader
@@ -46,32 +47,7 @@ function mountInstance(el) {
 
     // Global var becomes a *default* shared across instances, still overridable per-element
     const globalConfig = window.biblesupersearch_config_options || {};
-
     const config = Object.assign({}, defaultConfig, globalConfig, jsonConfig, attrConfig);
-
-    // if (
-    //     typeof window.biblesupersearch_statics === 'undefined' ||
-    //     window.biblesupersearch_statics === null
-    // ) {
-    //     // try to load statics from server
-    //     var url = (config.apiUrl || '') + '/api/statics';
-    //     console.log('Loading statics from', url);
-    //     axios
-    //         .get(url)
-    //         .then((response) => {
-    //             window.biblesupersearch_statics = response.data.results;
-    //             console.log('Loaded statics:', window.biblesupersearch_statics);
-
-    //             mountInstance(el);
-    //         })
-    //         .catch((error) => {
-    //             // Todo: show error to user, along with backup Bibles to download
-    //             console.error('Error loading statics:', error);
-    //             window.biblesupersearch_statics = false;
-    //         });
-
-    //     return;
-    // }
 
     const app = createApp(App);
     app.use(vuetify);
@@ -79,7 +55,8 @@ function mountInstance(el) {
     app.use(pinia);
 
     useConfigStore(pinia).init(config);
-    useStaticsStore(pinia).init(window.biblesupersearch_statics);
+    useStaticsStore(pinia).init(window.biblesupersearch_statics || {});
+    useSystemStore(pinia).setElemId(el.id);
 
     app.mount(el);
     el.dataset.bssMounted = 'true';

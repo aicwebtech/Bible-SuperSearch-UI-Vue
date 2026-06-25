@@ -8,33 +8,17 @@ export const useStaticsStore = defineStore('statics', () => {
     const statics = ref({});
     const configStore = useConfigStore();
     const systemStore = useSystemStore();
-    const globalStatics = window.biblesupersearch_statics || {};
-    const useGlobalStatics = true;
 
     function init(newStatics) {
         statics.value = newStatics || {};
 
-        if (
-            Object.keys(statics.value).length === 0 &&
-            useGlobalStatics &&
-            Object.keys(globalStatics).length > 0
-        ) {
-            statics.value = globalStatics;
-        }
-
         // If statics is empty, try to load from server
         if (Object.keys(statics.value).length === 0) {
             const url = (configStore.get('apiUrl') || '') + '/api/statics';
-            console.log('Loading statics from 44', url);
             axios
                 .get(url)
                 .then((response) => {
                     statics.value = response.data.results;
-
-                    if (useGlobalStatics) {
-                        window.biblesupersearch_statics = statics.value;
-                    }
-
                     systemStore.displayBasicInfo();
                 })
                 .catch((error) => {

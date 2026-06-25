@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { ref, inject } from 'vue';
+import { ref } from 'vue';
 import { useConfigStore } from '@/stores/config';
 import { useStaticsStore } from '@/stores/statics';
 
@@ -11,9 +11,6 @@ const chapter = ref(null);
 const configStore = useConfigStore();
 const url = configStore.get('apiUrl');
 const staticsStore = useStaticsStore();
-const statics = staticsStore.getAll();
-
-console.log('RandomVerse.vue:', configStore.getAll());
 
 function getRandomVerse() {
     reset();
@@ -75,7 +72,7 @@ function reset() {
 
         <h2>Info</h2>
         <p>API URL: {{ url }}</p>
-        <p>API Version: {{ statics.api_version }}</p>
-        <p>API Software Version: {{ statics.version }}</p>
+        <p>API Version: {{ staticsStore.get('api_version') }}</p>
+        <p>API Software Version: {{ staticsStore.get('version') }}</p>
     </div>
 </template>
