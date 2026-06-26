@@ -42,5 +42,31 @@ export const useStaticsStore = defineStore('statics', () => {
         return Object.keys(statics.value).length > 0;
     });
 
-    return { statics, init, get, getAll, has };
+    const apiVersion = computed(() => {
+        var allowed = ['v3', 'v2']; // allowed API versions, in preferred order
+
+        if (!statics.value.api_version) {
+            return null;
+        }
+
+        for (var i = 0; i < allowed.length; i++) {
+            if (statics.value.api_version === allowed[i]) {
+                return statics.value.api_version;
+            }
+        }
+
+        return statics.value.api_version || null;
+    });
+
+    const fullApiUrl = computed(() => {
+        const apiUrl = configStore.get('apiUrl');
+
+        if (apiUrl && apiVersion) {
+            return apiVersion.value ? `${apiUrl}/api/${apiVersion.value}` : `${apiUrl}/api`;
+        }
+
+        return null;
+    });
+
+    return { statics, init, get, getAll, has, apiVersion, fullApiUrl };
 });

@@ -9,14 +9,18 @@ import AudioContainer from '@/components/results/AudioContainer.vue';
 const verse = ref(null);
 const chapter = ref(null);
 const configStore = useConfigStore();
-const url = configStore.get('apiUrl');
 const staticsStore = useStaticsStore();
+const url = configStore.get('apiUrl');
 
 function getRandomVerse() {
     reset();
 
     axios
-        .get(url + '/api?reference=Random%20Verse&data_format=simple&_t=' + new Date().getTime())
+        .get(
+            staticsStore.fullApiUrl +
+                '?reference=Random%20Verse&data_format=simple&_t=' +
+                new Date().getTime(),
+        )
         .then(function (response) {
             verse.value = response.data.results.kjv[0];
         })
@@ -29,7 +33,11 @@ function getRandomChapter() {
     reset();
 
     axios
-        .get(url + '/api?reference=Random%20Chapter&data_format=simple&_t=' + new Date().getTime())
+        .get(
+            staticsStore.fullApiUrl +
+                '?reference=Random%20Chapter&data_format=simple&_t=' +
+                new Date().getTime(),
+        )
         .then(function (response) {
             chapter.value = response.data.results.kjv;
         })
@@ -74,5 +82,6 @@ function reset() {
         <p>API URL: {{ url }}</p>
         <p>API Version: {{ staticsStore.get('api_version') }}</p>
         <p>API Software Version: {{ staticsStore.get('version') }}</p>
+        <p>Full API URL: {{ staticsStore.fullApiUrl }}</p>
     </div>
 </template>
