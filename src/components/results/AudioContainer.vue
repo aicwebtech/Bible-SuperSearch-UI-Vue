@@ -4,7 +4,7 @@ import axios from 'axios';
 import { VBtn } from 'vuetify/components';
 
 const url = ref('');
-const Music = '/test_music.mp3';
+const Music = null;
 const Speech = null;
 
 function init() {

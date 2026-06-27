@@ -54,8 +54,6 @@ function reset() {
 
 <template>
     <div>
-        <audio-container></audio-container>
-
         <h1>Random (Composition API)</h1>
         <v-btn color="secondary" @click="getRandomChapter" prepend-icon="mdi-home"
             >Random Chapter</v-btn
